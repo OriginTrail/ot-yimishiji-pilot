@@ -792,33 +792,42 @@ class ArangoJS {
 
     /**
      * Removes hanging data set ID
-     * @param dataSetID
+     * @param datasetId
      * @returns {Promise<any>}
      */
-    async removeDataSetId(dataSetID) {
-        const queryString = 'LET documents = (' +
-            '    FOR d IN __COLLECTION__' +
-            '    FILTER' +
-            '        d.datasets != null' +
-            '        AND' +
-            '        POSITION(d.datasets, @dataSetID, false) != false' +
-            '    SORT d._key RETURN d' +
-            ')' +
-            'RETURN COUNT(\n' +
-            '    FOR d IN documents\n' +
-            '        LET pos = POSITION(d.datasets, @dataSetID, true)\n' +
-            '        LET dataSets = REMOVE_NTH(d.datasets, pos)\n' +
-            '        UPDATE { _key: d._key, datasets: dataSets } IN __COLLECTION__\n' +
-            '        RETURN 1)';
-
-        const edgesQuery = queryString.replace(/__COLLECTION__/g, 'ot_edges');
-        const verticesQuery = queryString.replace(/__COLLECTION__/g, 'ot_vertices');
-        const params = {
-            dataSetID,
-        };
-        let count = await this.runQuery(edgesQuery, params);
-        count += await this.runQuery(verticesQuery, params);
-        return count;
+    async removeDataset(datasetId) {
+        const fetchActionQuery = 'LET datasetMetadata = DOCUMENT(\'ot_datasets\', @datasetId)\n' +
+            'let datasetVertices = DOCUMENT(\'ot_vertices\', datasetMetadata.vertices)\n' +
+            'let datasetEdges = DOCUMENT(\'ot_edges\', datasetMetadata.edges)\n' +
+            'let verticesAction = (for v in datasetVertices\n' +
+            'LET pos = POSITION(v.datasets, @datasetId, true)\n' +
+            'LET datasets = pos == -1 ? v.datasets : REMOVE_NTH(v.datasets, pos)\n' +
+            'let action = LENGTH(datasets) == 0 ?  {action: \'delete\', key: v._key} :  {action: \'update\', key: v._key, datasets: datasets}\n' +
+            'return action)\n' +
+            'let edgesAction = (for v in datasetEdges\n' +
+            'LET pos = POSITION(v.datasets, @datasetId, true)\n' +
+            'LET datasets = pos == -1 ? v.datasets : REMOVE_NTH(v.datasets, pos)\n' +
+            'let action = LENGTH(datasets) == 0 ?  {action: \'delete\', key: v._key} :  {action: \'update\', key: v._key, datasets: datasets}\n' +
+            'return action)\n' +
+            'return {verticesAction: verticesAction, edgesAction: edgesAction}';
+        const actions = await this.runQuery(fetchActionQuery, { datasetId });
+        /* eslint-disable no-unused-expressions,import/no-unresolved,global-require */
+        const action = String((params) => {
+            const { query } = require('@arangodb');
+            query`for va in ${params.params.edgesAction} FILTER va.action == 'update' UPDATE { _key: va.key, datasets: va.datasets } IN 'ot_edges'`;
+            query`for va in ${params.params.verticesAction} FILTER va.action == 'update' UPDATE { _key: va.key, datasets: va.datasets } IN 'ot_vertices'`;
+            query`for va in ${params.params.edgesAction} FILTER va.action == 'delete' REMOVE { _key: va.key } IN 'ot_edges'`;
+            query`for va in ${params.params.verticesAction} FILTER va.action == 'delete' REMOVE { _key: va.key } IN 'ot_vertices'`;
+            query`REMOVE { _key: ${params.params.datasetId} } IN 'ot_datasets'`;
+        });
+        /* eslint-disable no-unused-expressions,import/no-unresolved,global-requir */
+        await this.db.transaction(['ot_vertices', 'ot_edges', 'ot_datasets'], action, {
+            params: {
+                edgesAction: actions[0].edgesAction,
+                verticesAction: actions[0].verticesAction,
+                datasetId,
+            },
+        });
     }
 
     /**

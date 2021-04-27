@@ -95,6 +95,19 @@ function getDataFileNames() {
     return ['kademlia.crt', 'kademlia.key', 'houston.txt', 'system.db'];
 }
 
+function getMigrationFileNames() {
+    const migrationFileNames = [];
+    const directoryPath = path.join(config.appDataPath, 'migrations');
+    if (fs.existsSync(directoryPath)) {
+        fs.readdir(directoryPath, (err, files) => {
+            files.forEach((file) => {
+                migrationFileNames.push(file);
+            });
+        });
+    }
+    return migrationFileNames;
+}
+
 function moveFileFromNodeToBackup(fileName, nodeDir, backupDir, showErrors = true) {
     try {
         const source = path.join(nodeDir, fileName);
@@ -129,6 +142,7 @@ function createBackupFolder() {
 
     console.log(`Creating ${argv.backup_directory}/${timestamp} directories...`);
     mkdirp.sync(`${argv.backup_directory}/${timestamp}`);
+    mkdirp.sync(`${argv.backup_directory}/${timestamp}/migrations`);
 
     return path.join(argv.backup_directory, timestamp);
 }
@@ -140,6 +154,7 @@ function main() {
         const identityFiles = getIdentityFileNames();
         const certs = getCertificateFileNames();
         const dataFiles = getDataFileNames();
+        const migrationFiles = getMigrationFileNames();
 
         backupDir = createBackupFolder();
 
@@ -164,6 +179,10 @@ function main() {
 
         for (const file of certs) {
             moveFileFromNodeToBackup(file, argv.certs, backupDir, false);
+        }
+
+        for (const file of migrationFiles) {
+            moveFileFromNodeToBackup(file, path.join(config.appDataPath, 'migrations'), path.join(backupDir, 'migrations'));
         }
 
         console.log('Database export...');

@@ -5,7 +5,15 @@ require('winston-papertrail').Papertrail;
 require('winston-loggly-bulk');
 const util = require('util');
 
-const runtimeConfigJson = require('../config/config.json')[process.env.NODE_ENV];
+if (!process.env.NODE_ENV) {
+    // Environment not set. Use the production.
+    process.env.NODE_ENV = 'testnet';
+}
+const environment = process.env.NODE_ENV === 'mariner' ? 'mainnet' : process.env.NODE_ENV;
+if (['mainnet', 'testnet', 'development'].indexOf(environment) < 0) {
+    throw Error(`Unsupported node environment ${environment}`);
+}
+const runtimeConfigJson = require('../config/config.json')[environment];
 
 const colors = require('colors/safe');
 const pjson = require('../package.json');

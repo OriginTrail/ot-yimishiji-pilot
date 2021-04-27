@@ -581,17 +581,22 @@ class OTNode {
         let deadline = Date.now();
         setInterval(async () => {
             if (!working && Date.now() > deadline) {
-                working = true;
-                await blockchain.getAllPastEvents('HUB_CONTRACT');
-                await blockchain.getAllPastEvents('HOLDING_CONTRACT');
-                await blockchain.getAllPastEvents('PROFILE_CONTRACT');
-                await blockchain.getAllPastEvents('APPROVAL_CONTRACT');
-                await blockchain.getAllPastEvents('LITIGATION_CONTRACT');
-                await blockchain.getAllPastEvents('MARKETPLACE_CONTRACT');
-                await blockchain.getAllPastEvents('REPLACEMENT_CONTRACT');
-                await blockchain.getAllPastEvents('OLD_HOLDING_CONTRACT'); // TODO remove after successful migration
-                deadline = Date.now() + delay;
-                working = false;
+                try {
+                    working = true;
+                    await blockchain.getAllPastEvents('HUB_CONTRACT');
+                    await blockchain.getAllPastEvents('HOLDING_CONTRACT');
+                    await blockchain.getAllPastEvents('PROFILE_CONTRACT');
+                    await blockchain.getAllPastEvents('APPROVAL_CONTRACT');
+                    await blockchain.getAllPastEvents('LITIGATION_CONTRACT');
+                    await blockchain.getAllPastEvents('MARKETPLACE_CONTRACT');
+                    await blockchain.getAllPastEvents('REPLACEMENT_CONTRACT');
+                    await blockchain.getAllPastEvents('OLD_HOLDING_CONTRACT'); // TODO remove after successful migration
+                    deadline = Date.now() + delay;
+                } catch (e) {
+                    log.error(`Failed to get blockchain events. Error: ${e}`);
+                } finally {
+                    working = false;
+                }
             }
         }, 5000);
     }

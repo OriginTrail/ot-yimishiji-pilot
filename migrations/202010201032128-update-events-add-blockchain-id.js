@@ -5,7 +5,11 @@ if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = 'testnet';
 }
 
-const environmentConfig = global_config[process.env.NODE_ENV];
+const environment = process.env.NODE_ENV === 'mariner' ? 'mainnet' : process.env.NODE_ENV;
+if (['mainnet', 'testnet', 'development'].indexOf(environment) < 0) {
+    throw Error(`Unsupported node environment ${environment}`);
+}
+const environmentConfig = global_config[environment];
 const blockchain_id = environmentConfig.blockchain.implementations[0].network_id;
 
 module.exports = {

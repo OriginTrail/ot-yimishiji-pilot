@@ -14,16 +14,28 @@ class M7ArangoDatasetSignatureMigration {
      * Run migration
      */
     async run() {
-        const queryString = `for dataset in ot_datasets
-UPDATE dataset WITH { signature: [{
-type: dataset.signature.type,
-proofValue: dataset.signature.value, 
-proofPurpose: 'assertionMethod',
-created: dataset.datasetHeader.datasetCreationTimestamp,
-domain: @blockchain_id
-}] } IN ot_datasets`;
+        const fetchDocumentsKeys = 'for dataset in ot_datasets return {key: dataset._key}';
+        const keys = await this.graphStorage.runQuery(fetchDocumentsKeys);
         const blockchain_id = this.config.blockchain.implementations[0].network_id;
-        await this.graphStorage.runQuery(queryString, { blockchain_id });
+        for (let i = 0; i < keys.length; i += 1) {
+            const { key } = keys[i];
+            const fetchDocumentsQuery = 'RETURN DOCUMENT(\'ot_datasets\', @key)';
+            // eslint-disable-next-line no-await-in-loop
+            const documentArray = await this.graphStorage.runQuery(fetchDocumentsQuery, { key });
+            const document = documentArray[0];
+            if (!Array.isArray(document.signature)) {
+                const newSignature = [{
+                    type: document.signature.type,
+                    proofValue: document.signature.value,
+                    proofPurpose: 'assertionMethod',
+                    created: document.datasetHeader.datasetCreationTimestamp,
+                    domain: blockchain_id,
+                }];
+                document.signature = newSignature;
+                // eslint-disable-next-line no-await-in-loop
+                await this.graphStorage.updateDocument('ot_datasets', document);
+            }
+        }
     }
 }
 

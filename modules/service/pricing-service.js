@@ -35,7 +35,7 @@ class PricingService {
         const price = (2 * basePayoutCostInTrac) + (priceFactor *
         Math.sqrt(2 * holdingTimeInDays * dataSizeInMB));
 
-        const finalPrice = price * 1000000000000000000;
+        const finalPrice = Math.ceil(price * 1000000000000000000);
         this.logger.trace(`Calculated offer price for data size: ${dataSizeInMB}MB, and holding time: ${holdingTimeInDays} days, PRICE: ${finalPrice}[mTRAC]`);
         return { finalPrice, tracInBaseCurrency, gasPriceInGwei };
     }

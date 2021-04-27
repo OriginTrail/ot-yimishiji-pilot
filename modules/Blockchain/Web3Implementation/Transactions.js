@@ -23,22 +23,44 @@ class Transactions {
 
         this.queue = new Queue((async (args, cb) => {
             const { transaction, future } = args;
+            let transactionHash;
             let transactionHandled = false;
             try {
                 for (let i = 0; i < 3; i += 1) {
                     try {
+                        const { serializedTx, transactionHash: txHash } =
+                            // eslint-disable-next-line no-await-in-loop
+                            await this._getTransactionHash(transaction);
+                        transactionHash = txHash;
+
                         // eslint-disable-next-line no-await-in-loop
-                        const result = await this._sendTransaction(transaction);
+                        const result = await this._sendTransaction(transaction, serializedTx);
                         if (result.status === '0x0') {
                             future.reject(result);
-                            transactionHandled = true;
-                            break;
                         } else {
                             future.resolve(result);
-                            transactionHandled = true;
-                            break;
                         }
+
+                        transactionHandled = true;
+                        break;
                     } catch (error) {
+                        if (error.toString().includes('Failed to check for transaction receipt')) {
+                            if (transactionHash && !Utilities.isZeroHash(transactionHash)) {
+                                const transactionReceipt =
+                                    // eslint-disable-next-line no-await-in-loop
+                                    await this._fetchTransactionReceipt(transactionHash);
+
+                                if (transactionReceipt.status) {
+                                    future.resolve(transactionReceipt);
+                                } else {
+                                    future.reject(transactionReceipt);
+                                }
+
+                                transactionHandled = true;
+                                break;
+                            }
+                        }
+
                         if (!error.toString().includes('nonce too low') && !error.toString().includes('underpriced') &&
                             // Ganache's version of nonce error.
                             error.name !== 'TXRejectedError' && !error.toString().includes('the tx doesn\'t have the correct nonce.')
@@ -68,8 +90,36 @@ class Transactions {
      * Send transaction to Ethereum blockchain
      * @returns {PromiEvent<TransactionReceipt>}
      * @param newTransaction
+     * @param serializedTx
      */
-    async _sendTransaction(newTransaction) {
+    async _sendTransaction(newTransaction, serializedTx) {
+        const balance = await this.web3.eth.getBalance(this.walletAddress);
+        const currentBalance = new BN(balance, 10);
+        const requiredAmount =
+            new BN(300000)
+                .imul(new BN(Utilities.denormalizeHex(newTransaction.options.gasPrice), 16));
+        const totalPriceBN =
+            new BN(Utilities.denormalizeHex(newTransaction.options.gasPrice), 16)
+                .imul(new BN(Utilities.denormalizeHex(newTransaction.options.gasLimit), 16));
+
+        if (currentBalance.lt(totalPriceBN)) {
+            throw Error(`ETH balance lower (${currentBalance.toString()}) than transaction cost (${totalPriceBN.toString()}).`);
+        }
+        // If current balance not enough for 300000 gas notify low ETH balance.
+        if (currentBalance.lt(requiredAmount)) {
+            this.logger.warn(`ETH balance running low! Your balance: ${currentBalance.toString()}  wei, while minimum required is: ${requiredAmount.toString()} wei`);
+        }
+
+        this.logger.trace(`Sending transaction to blockchain, nonce ${newTransaction.options.nonce}, balance is ${currentBalance.toString()}`);
+        return this.web3.eth.sendSignedTransaction(serializedTx);
+    }
+
+    /**
+     * Calculates the transaction hash for an Ethereum blockchain transaction object
+     * @returns string - transactionHash
+     * @param newTransaction
+     */
+    async _getTransactionHash(newTransaction) {
         if (!Utilities.isHexStrict(newTransaction.options.gasPrice)) {
             throw Error('Gas price has to be in hex format.');
         }
@@ -93,27 +143,33 @@ class Transactions {
 
         transaction.sign(this.privateKey);
 
-        const serializedTx = transaction.serialize().toString('hex');
+        const serializedTx = Utilities.normalizeHex(transaction.serialize().toString('hex'));
 
-        const balance = await this.web3.eth.getBalance(this.walletAddress);
-        const currentBalance = new BN(balance, 10);
-        const requiredAmount =
-            new BN(300000)
-                .imul(new BN(Utilities.denormalizeHex(newTransaction.options.gasPrice), 16));
-        const totalPriceBN =
-            new BN(Utilities.denormalizeHex(newTransaction.options.gasPrice), 16)
-                .imul(new BN(Utilities.denormalizeHex(newTransaction.options.gasLimit), 16));
+        return {
+            serializedTx,
+            transactionHash: this.web3.utils.sha3(serializedTx, { encoding: 'hex' }),
+        };
+    }
 
-        if (currentBalance.lt(totalPriceBN)) {
-            throw Error(`ETH balance lower (${currentBalance.toString()}) than transaction cost (${totalPriceBN.toString()}).`);
+    async _fetchTransactionReceipt(transactionHash) {
+        let receipt;
+        for (let i = 0; i < 3; i += 1) {
+            // eslint-disable-next-line no-await-in-loop
+            await Utilities.sleepForMilliseconds(5000);
+
+            try {
+                // eslint-disable-next-line no-await-in-loop
+                receipt = await this.web3.eth.getTransactionReceipt(transactionHash);
+                if (Object.keys(receipt).length > 0) {
+                    break;
+                }
+                this.logger.warn(`Failed to fetch transaction receipt from empty response on attempt ${i + 1}.`);
+            } catch (e) {
+                this.logger.warn(`Failed to fetch transaction receipt. Error: ${e.toString()}`);
+            }
         }
-        // If current balance not enough for 300000 gas notify low ETH balance.
-        if (currentBalance.lt(requiredAmount)) {
-            this.logger.warn(`ETH balance running low! Your balance: ${currentBalance.toString()}  wei, while minimum required is: ${requiredAmount.toString()} wei`);
-        }
 
-        this.logger.trace(`Sending transaction to blockchain, nonce ${newTransaction.options.nonce}, balance is ${currentBalance.toString()}`);
-        return this.web3.eth.sendSignedTransaction(`0x${serializedTx}`);
+        return receipt;
     }
 
     /**

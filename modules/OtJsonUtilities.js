@@ -1,6 +1,15 @@
 const Utilities = require('./Utilities');
 const { sha3_256 } = require('js-sha3');
-const defaultConfig = require('../config/config')[process.env.NODE_ENV];
+
+if (!process.env.NODE_ENV) {
+    // Environment not set. Use the production.
+    process.env.NODE_ENV = 'testnet';
+}
+const environment = process.env.NODE_ENV === 'mariner' ? 'mainnet' : process.env.NODE_ENV;
+if (['mainnet', 'testnet', 'development'].indexOf(environment) < 0) {
+    throw Error(`Unsupported node environment ${environment}`);
+}
+const defaultConfig = require('../config/config')[environment];
 
 
 class OtJsonUtilities {
@@ -80,7 +89,7 @@ class OtJsonUtilities {
             let blockchain_id;
             if (datasetHeader.validationSchemas[validationSchemaName].networkId === 'mainnet' ||
                 datasetHeader.validationSchemas[validationSchemaName].networkId === 'rinkeby') {
-                blockchain_id = defaultConfig.blockchain.implementations[0].networkId;
+                blockchain_id = defaultConfig.blockchain.implementations[0].network_id;
             } else {
                 blockchain_id = datasetHeader.validationSchemas[validationSchemaName].networkId;
             }

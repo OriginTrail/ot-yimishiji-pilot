@@ -256,23 +256,6 @@ exec /usr/bin/supervisord -c /ot-node/current/testnet/supervisord.conf
             externalConfig = JSON.parse(fs.readFileSync(localConfigPath, 'utf8'));
         }
 
-        if (process.env.ERC_725_IDENTITY) {
-            const erc725IdentityFilePath = path.join(
-                localConfiguration.appDataPath,
-                localConfiguration.erc725_identity_filepath,
-            );
-            const content = { identity: process.env.ERC_725_IDENTITY };
-            fs.writeFileSync(erc725IdentityFilePath, JSON.stringify(content, null, 4));
-            logger.info('Identity given: ', process.env.ERC_725_IDENTITY);
-        }
-
-        if (process.env.IMPORT_WHITELIST) {
-            if (!externalConfig.network) {
-                externalConfig.network = {};
-            }
-            externalConfig.network.remoteWhitelist = process.env.IMPORT_WHITELIST.split(',');
-        }
-
         deepExtend(localConfiguration, externalConfig);
         logger.info('Configuration:');
         // Mask private key before printing it.

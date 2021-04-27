@@ -7,6 +7,7 @@ const models = require('../../models');
 const constants = require('../constants');
 const ImportUtilities = require('../ImportUtilities');
 
+
 class DCService {
     constructor(ctx) {
         this.transport = ctx.transport;
@@ -278,9 +279,17 @@ class DCService {
         if (async_enabled) {
             await this._sendReplicationAcknowledgement(offerId, identity, response);
 
+            const minDelay =
+                Math.min(constants.REPLICATION_MIN_DELAY_MILLS, this.config.dc_choose_time * 0.1);
+            const maxDelay = this.config.dc_choose_time * 0.9;
+            const randomDelay = Math.ceil(minDelay + (Math.random() * (maxDelay - minDelay)));
+
+            const startTime = parseInt(offer.replication_start_timestamp, 10);
+            const adjustedDelay = (startTime - Date.now()) + randomDelay;
+
             await this.commandExecutor.add({
                 name: 'dcReplicationSendCommand',
-                delay: 0,
+                delay: (adjustedDelay > 0 ? adjustedDelay : 0),
                 data: {
                     internalOfferId: offer.id,
                     offerId,
@@ -288,6 +297,8 @@ class DCService {
                     identity,
                     dhIdentity,
                     response,
+                    blockchainId: offer.blockchain_id,
+                    replicationStartTime: startTime,
                 },
                 transactional: false,
             });
@@ -396,6 +407,7 @@ class DCService {
                     identity,
                     dhIdentity,
                     response,
+                    replicationStartTime: parseInt(offer.replication_start_timestamp, 10),
                 },
                 transactional: false,
             });

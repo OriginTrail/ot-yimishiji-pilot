@@ -91,6 +91,7 @@ class DVDataReadResponseFreeCommand extends Command {
                 const fingerprint = await this.blockchain
                     .getRootHash(dataSetId, signerObject.blockchain_id).response;
 
+
                 if (fingerprint && !Utilities.isZeroHash(fingerprint)) {
                     validationData.fingerprints_exist += 1;
                     if (fingerprint === rootHash) {

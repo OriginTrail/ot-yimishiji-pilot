@@ -22,7 +22,7 @@ describe('Utilities module', () => {
                     'control_port_enabled', 'control_port', 'control_sock_enabled', 'control_sock', 'onion_enabled',
                     'ssl_authority_paths', 'node_rpc_port', 'default_data_price', 'operational_db',
                     'remote_control_enabled', 'dc_challenge_retry_delay_in_millis', 'dh_challenge_retry_delay_in_millis',
-                    'read_stake_factor', 'send_logs_to_origintrail',
+                    'read_stake_factor', 'send_logs_to_origintrail', 'dataset_pruning',
                     'dh_min_reputation', 'dh_min_stake_amount', 'houston_password_file_name',
                     'is_bootstrap_node', 'houston_password', 'reverse_tunnel_address', 'reverse_tunnel_port',
                     'autoUpdater', 'bugSnag', 'network', 'dataSetStorage', 'dc_holding_time_in_minutes', 'dc_choose_time', 'dc_litigation_interval_in_minutes',

@@ -66,8 +66,8 @@ class AutoupdaterCommand extends Command {
         if (semver.lt(currentVersion, remoteVersion)) {
             this.logger.info('New version found');
 
-            if (remoteVersion === '5.0.0') {
-                this.logger.trace('New version available is 5.0.0. Please run update process manually.');
+            if (semver.major(currentVersion) < semver.major(remoteVersion)) {
+                this.logger.important(`New major update available. Please run update to version ${remoteVersion} manually.`);
                 return Command.repeat();
             }
 

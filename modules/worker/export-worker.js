@@ -5,7 +5,16 @@ const Utilities = require('../Utilities');
 const ImportUtilities = require('../ImportUtilities');
 const OtJsonUtilities = require('../OtJsonUtilities');
 const fs = require('fs');
-const defaultConfig = require('../../config/config')[process.env.NODE_ENV];
+
+if (!process.env.NODE_ENV) {
+    // Environment not set. Use the production.
+    process.env.NODE_ENV = 'testnet';
+}
+const environment = process.env.NODE_ENV === 'mariner' ? 'mainnet' : process.env.NODE_ENV;
+if (['mainnet', 'testnet', 'development'].indexOf(environment) < 0) {
+    throw Error(`Unsupported node environment ${environment}`);
+}
+const defaultConfig = require('../../config/config')[environment];
 
 process.on('message', async (data) => {
     const {
@@ -58,9 +67,13 @@ process.on('message', async (data) => {
                 }
                 if (schemaObject) {
                     // Added to overwrite the previous ambiguous blockchain_id of Ethereum
-                    const blockchain_id = schemaObject.networkId === 'mainnet' ?
-                        defaultConfig.blockchain.implementations[0].network_id :
-                        schemaObject.networkId;
+                    let blockchain_id;
+                    if (schemaObject.networkId === 'mainnet' ||
+                        schemaObject.networkId === 'rinkeby') {
+                        blockchain_id = defaultConfig.blockchain.implementations[0].network_id;
+                    } else {
+                        blockchain_id = schemaObject.networkId;
+                    }
 
                     identifierObject.blockchain_id = blockchain_id;
                 } else {

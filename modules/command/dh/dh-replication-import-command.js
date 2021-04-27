@@ -286,19 +286,11 @@ class DhReplicationImportCommand extends Command {
                 data_hash: dataHash,
             });
         }
-        const dataProviderWallet = await Models.data_provider_wallets.findOne({
-            where: {
-                wallet: Utilities.normalizeHex(dcWallet),
-                blockchain_id: blockchainId,
-            },
+        await Models.data_provider_wallets.create({
+            data_info_id: dataInfo.id,
+            wallet: Utilities.normalizeHex(dcWallet),
+            blockchain_id: blockchainId,
         });
-        if (!dataProviderWallet) {
-            Models.data_provider_wallets.create({
-                data_info_id: dataInfo.id,
-                wallet: Utilities.normalizeHex(dcWallet),
-                blockchain_id: blockchainId,
-            });
-        }
     }
 
     async sendReplicationFinishedMessage(offerId, dcNodeId, blockchainId) {

@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'mainnet';
+
 const {
     describe, before, beforeEach, it,
 } = require('mocha');

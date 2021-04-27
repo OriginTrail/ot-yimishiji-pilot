@@ -101,14 +101,22 @@ class Blockchain {
             result.implementations = [];
 
             for (const implUserConfig of config.implementations) {
+                if (!implUserConfig.blockchain_title && !implUserConfig.network_id) {
+                    throw Error('Blockchain implementation missing type, please add blockchain_title and network_id parameter.');
+                }
                 if (!implUserConfig.blockchain_title) {
-                    throw Error(`Blockchain implementation missing title.\nGiven config: ${JSON.stringify(implUserConfig, null, 4)}`);
+                    throw Error('Blockchain implementation missing type, please add blockchain_title parameter');
+                }
+                if (!implUserConfig.network_id) {
+                    throw Error('Blockchain implementation missing id, please add network_id parameter.');
                 }
 
                 const implDefaultConfig =
-                    defaults.find(cfg => cfg.blockchain_title === implUserConfig.blockchain_title);
+                    defaults.find(cfg => (cfg.network_id === implUserConfig.network_id
+                        && cfg.blockchain_title === implUserConfig.blockchain_title));
                 if (!implDefaultConfig) {
-                    throw Error(`Unsupported blockchain ${implUserConfig.blockchain_title}`);
+                    throw Error(`Blockchain with type ${implUserConfig.blockchain_title}`
+                       + ` and id ${implUserConfig.network_id} is not supported on the ot-node`);
                 }
 
                 result.implementations.push(deepExtend({}, implDefaultConfig, implUserConfig));
@@ -553,26 +561,36 @@ class Blockchain {
         }
 
         const that = this;
+        let processingEvents = false;
+
         const handle = setInterval(async () => {
-            if (!that.appState.started) {
-                return;
-            }
+            try {
+                if (!that.appState.started) {
+                    return;
+                }
+                if (processingEvents) {
+                    return;
+                }
+                processingEvents = true;
 
-            const where = {
-                event,
-                finished: 0,
-                [Op.or]: blockStartConditions,
-            };
+                const where = {
+                    event,
+                    finished: 0,
+                    [Op.or]: blockStartConditions,
+                };
 
-            const eventData = await Models.events.findAll({ where });
-            if (eventData) {
-                eventData.forEach(async (data) => {
-                    const dataToSend = JSON.parse(data.dataValues.data);
-                    dataToSend.blockchain_id = data.dataValues.blockchain_id;
-                    this.emitter.emit(`eth-${data.event}`, dataToSend);
-                    data.finished = 1;
-                    await data.save();
-                });
+                const eventData = await Models.events.findAll({ where });
+                if (eventData) {
+                    eventData.forEach(async (data) => {
+                        const dataToSend = JSON.parse(data.dataValues.data);
+                        dataToSend.blockchain_id = data.dataValues.blockchain_id;
+                        this.emitter.emit(`eth-${data.event}`, dataToSend);
+                        data.finished = 1;
+                        await data.save();
+                    });
+                }
+            } finally {
+                processingEvents = false;
             }
         }, 2000);
 
@@ -696,25 +714,37 @@ class Blockchain {
     async handleReceivedEvents(events, contractName, blockchain_id) {
         for (let i = 0; events && i < events.length; i += 1) {
             const event = events[i];
-            const timestamp = Date.now();
+
             if (event.returnValues.DH_wallet) {
                 event.returnValues.DH_wallet = event.returnValues.DH_wallet.toLowerCase();
             }
-            /* eslint-disable-next-line */
-            await Models.events.create({
-                id: uuidv4(),
-                contract: contractName,
-                event: event.event,
-                data: JSON.stringify(event.returnValues),
-                data_set_id: Utilities.normalizeHex(event.returnValues.dataSetId),
-                block: event.blockNumber,
-                blockchain_id,
-                timestamp,
-                finished: 0,
+            const eventData = JSON.stringify(event.returnValues);
+            // eslint-disable-next-line no-await-in-loop
+            const databaseEvent = await Models.events.findOne({
+                where: {
+                    contract: contractName,
+                    event: event.event,
+                    data: eventData,
+                    block: event.blockNumber,
+                    blockchain_id,
+                },
             });
+            if (!databaseEvent) {
+                const timestamp = Date.now();
+                /* eslint-disable-next-line */
+                await Models.events.create({
+                    id: uuidv4(),
+                    contract: contractName,
+                    event: event.event,
+                    data: eventData,
+                    data_set_id: Utilities.normalizeHex(event.returnValues.dataSetId),
+                    block: event.blockNumber,
+                    blockchain_id,
+                    timestamp,
+                    finished: 0,
+                });
+            }
         }
-
-
         const twoWeeksAgo = new Date();
         twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
         // Delete old events

@@ -13,7 +13,15 @@ const OtJsonUtilities = require('./OtJsonUtilities');
 const DataIntegrityResolver = require('./service/data-integrity/data-integrity-resolver');
 // TODO Is this safe to read, IE will it always be the same,
 //  (could the node somehow change this in runtime? )
-const defaultConfig = require('../config/config')[process.env.NODE_ENV];
+if (!process.env.NODE_ENV) {
+    // Environment not set. Use the production.
+    process.env.NODE_ENV = 'testnet';
+}
+const environment = process.env.NODE_ENV === 'mariner' ? 'mainnet' : process.env.NODE_ENV;
+if (['mainnet', 'testnet', 'development'].indexOf(environment) < 0) {
+    throw Error(`Unsupported node environment ${environment}`);
+}
+const defaultConfig = require('../config/config')[environment];
 
 const data_constants = {
     vertexType: {
@@ -914,12 +922,13 @@ class ImportUtilities {
                 datasetHeader.validationSchemas[validationSchemaName];
 
             // Added to overwrite the previous ambiguous blockchain_id of Ethereum
-            let blockchain_id = validationSchema.networkId === 'mainnet' ?
-                defaultConfig.blockchain.implementations[0].network_id : validationSchema.networkId;
-
-            // Added for testing the fix locally, remove when tested
-            blockchain_id = validationSchema.networkId === 'ganache' ?
-                defaultConfig.blockchain.implementations[0].network_id : validationSchema.networkId;
+            let blockchain_id;
+            if (validationSchema.networkId === 'mainnet' ||
+                validationSchema.networkId === 'rinkeby') {
+                blockchain_id = defaultConfig.blockchain.implementations[0].network_id;
+            } else {
+                blockchain_id = validationSchema.networkId;
+            }
 
             identities.push({
                 blockchain_id,

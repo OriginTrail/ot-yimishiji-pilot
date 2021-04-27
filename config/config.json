@@ -94,6 +94,64 @@
           "dc_price_factor" : "3",
           "dh_price_factor" : "2",
           "trac_price_in_base_currency" : "0.4"
+        },
+        {
+          "blockchain_title": "Ethereum",
+          "network_id": "ganache_7545",
+          "hub_contract_address": "0x2B7ca432a13e0D035BC46F0d6bf3cde1E72A10E5",
+          "identity_filepath": "ganache_7545_erc725_identity.json",
+          "gas_limit": "2000000",
+          "gas_price": "20000000000",
+          "max_allowed_gas_price" : 100000000000,
+          "dc_price_factor" : "3",
+          "dh_price_factor" : "2",
+          "trac_price_in_base_currency" : "0.00005",
+          "node_wallet": "",
+          "node_private_key": "",
+          "management_wallet": "",
+          "plugins": [
+            {
+              "enabled": false,
+              "provider": "Hyperledger",
+              "name": "fingerprint-plugin",
+              "config": {
+                "url": "URL",
+                "auth": {
+                  "user": "USER",
+                  "pass": "PASS"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "blockchain_title": "Ethereum",
+          "network_id": "ganache_8545",
+          "hub_contract_address": "0x2B7ca432a13e0D035BC46F0d6bf3cde1E72A10E5",
+          "identity_filepath": "ganache_8545_erc725_identity.json",
+          "gas_limit": "2000000",
+          "gas_price": "20000000000",
+          "max_allowed_gas_price" : 100000000000,
+          "dc_price_factor" : "3",
+          "dh_price_factor" : "2",
+          "trac_price_in_base_currency" : "0.00005",
+          "node_wallet": "",
+          "node_private_key": "",
+          "management_wallet": "",
+          "plugins": [
+            {
+              "enabled": false,
+              "provider": "Hyperledger",
+              "name": "fingerprint-plugin",
+              "config": {
+                "url": "URL",
+                "auth": {
+                  "user": "USER",
+                  "pass": "PASS"
+                }
+              }
+            }
+          ]
         }
       ]
     },
@@ -159,6 +217,11 @@
       "username": "ot_node",
       "password": "origintrail",
       "root_user_password": "origintrail"
+    },
+    "dataset_pruning": {
+      "enabled": false,
+      "imported_pruning_delay_in_minutes": 1440,
+      "replicated_pruning_delay_in_minutes": 1440
     }
   },
   "testnet": {
@@ -218,9 +281,38 @@
       "implementations": [
         {
           "blockchain_title": "Ethereum",
-          "network_id": "rinkeby",
+          "network_id": "ethr:rinkeby:1",
           "hub_contract_address": "0x85720D4D09A52eD66656b28c68567E41AD45dD0e",
           "identity_filepath": "erc725_identity.json",
+          "gas_limit": "2000000",
+          "gas_price": "20000000000",
+          "max_allowed_gas_price" : 50000000000,
+          "dc_price_factor" : "3",
+          "dh_price_factor" : "2",
+          "trac_price_in_base_currency" : "0.00005",
+          "node_wallet": "",
+          "node_private_key": "",
+          "management_wallet": "",
+          "plugins": [
+            {
+              "enabled": false,
+              "provider": "Hyperledger",
+              "name": "fingerprint-plugin",
+              "config": {
+                "url": "URL",
+                "auth": {
+                  "user": "USER",
+                  "pass": "PASS"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "blockchain_title": "Ethereum",
+          "network_id": "ethr:rinkeby:2",
+          "hub_contract_address": "0xfdf46024707698ccc26ec2997C2aE71C74CCA8aC",
+          "identity_filepath": "rinkeby_2_erc725_identity.json",
           "gas_limit": "2000000",
           "gas_price": "20000000000",
           "max_allowed_gas_price" : 50000000000,
@@ -261,16 +353,16 @@
     },
     "network": {
       "hostname": "127.0.0.1",
-      "id": "TestnetV4.0",
+      "id": "TestnetV5.0",
       "bootstraps": [
-        "https://rinkeby-mariner-bootstrap-01.origin-trail.network:5278/#3f89be24b1cee4d80f5059993260322f9998b189",
-        "https://rinkeby-mariner-bootstrap-02.origin-trail.network:5278/#d3951837f8100e6ea4a74417d560bcc8c6d4ffe5",
-        "https://rinkeby-mariner-bootstrap-03.origin-trail.network:5278/#ad3c3325e50c3bedcb5c6ee6a73592b2ca7e07aa"
+        "https://testnet-v5-bootstrap-01.origin-trail.network:5278/#18495958e045420f1b5359959c4546061a695bbf",
+        "https://testnet-v5-bootstrap-02.origin-trail.network:5278/#6ce3eb209ac47df60931b66415eea4c156957b63",
+        "https://testnet-v5-bootstrap-03.origin-trail.network:5278/#7f9080d1f501884f9d4ab7ef7126c681edffd420"
       ],
       "remoteWhitelist": ["127.0.0.1", "localhost"],
       "solutionDifficulty": 14,
       "identityDifficulty": 12,
-      "routing_table_validity_period_in_hours": 24,
+      "routing_table_validity_period_in_hours": 0,
       "churnPlugin": {
         "cooldownBaseTimeout": "5m",
         "cooldownMultiplier": 2,
@@ -325,6 +417,11 @@
       "username": "ot_node",
       "password": "origintrail",
       "root_user_password": "origintrail"
+    },
+    "dataset_pruning": {
+      "enabled": false,
+      "imported_pruning_delay_in_minutes": 1440,
+      "replicated_pruning_delay_in_minutes": 1440
     }
   },
   "mainnet": {
@@ -384,7 +481,7 @@
       "implementations": [
         {
           "blockchain_title": "Ethereum",
-          "network_id": "eth_mainnet",
+          "network_id": "ethr:mainnet",
           "hub_contract_address": "0x89777F4D16F0a263F47EaD07cbCAb9497861aa79",
           "identity_filepath": "erc725_identity.json",
           "gas_limit": "2000000",
@@ -410,18 +507,30 @@
               }
             }
           ]
+        },
+        {
+          "blockchain_title": "xDai",
+          "network_id": "xdai:mainnet",
+          "rpc_server_url": "https://rpc.xdaichain.com/origintrail/",
+          "hub_contract_address": "0xB4Cf5D3876FA929706A87F3B4042C741dcb3d688",
+          "identity_filepath": "xdai_erc725_identity.json",
+          "gas_limit": "2000000",
+          "gas_price": "1000000000",
+          "dc_price_factor" : "3",
+          "dh_price_factor" : "2",
+          "trac_price_in_base_currency" : "0.4"
         }
       ]
     },
     "network": {
       "hostname": "127.0.0.1",
-      "id": "MainnetV4.0",
+      "id": "MainnetV5.0",
       "bootstraps": [
-        "https://mainnet-bootstrap-wm-monica-borer-21.origin-trail.network:5278/#61a8b70d373c8c64a1cecf2602b9176399ace9ca",
-        "https://mainnet-bootstrap-wm-wilbert-bode-41.origin-trail.network:5278/#a9a53281f99538c3e23cf0b2726cfd5901611ff5",
-        "https://mainnet-bootstrap-wm-dortha-metz-70.origin-trail.network:5278/#5d462772267b8ae0e4fdf52397a370439f338c9d",
-        "https://mainnet-bootstrap-wm-domenick-goldner-5.origin-trail.network:5278/#ae3896d7cf0a52f3dddeef80b5243695dce88cdf",
-        "https://mainnet-bootstrap-wm-kaleigh-schaefer-47.origin-trail.network:5278/#95f54eb6bc713706e2ec76881ea11db390cad51d"
+        "https://mainnet-v5-bootstrap-01.origin-trail.network:5278/#2fb5b2be09986339af10c8814a8c873d2c8da0a4",
+        "https://mainnet-v5-bootstrap-02.origin-trail.network:5278/#9ce3fbf5d024e5ef2f2818af26ddce209445c9a9",
+        "https://mainnet-v5-bootstrap-03.origin-trail.network:5278/#d2e4e497ed3aee9a39bd63d222c65f2f49139f94",
+        "https://mainnet-v5-bootstrap-04.origin-trail.network:5278/#379f4074efcc099d24bd20fd2c3edd7db89a9146",
+        "https://mainnet-v5-bootstrap-05.origin-trail.network:5278/#806fd2dab905088e2b5cb3c4e59296b871878da3"
       ],
       "remoteWhitelist": ["127.0.0.1"],
       "solutionDifficulty": 14,
@@ -453,7 +562,7 @@
     "dh_max_holding_time_in_minutes": 5256000,
     "dh_maximum_dataset_filesize_in_mb": 5,
     "dh_min_litigation_interval_in_minutes": 5,
-    "dc_choose_time": 600000,
+    "dc_choose_time": 1200000,
     "requireApproval": false,
     "litigationEnabled": true,
     "commandExecutorVerboseLoggingEnabled": false,
@@ -481,6 +590,11 @@
       "username": "ot_node",
       "password": "origintrail",
       "root_user_password": "origintrail"
+    },
+    "dataset_pruning": {
+      "enabled": false,
+      "imported_pruning_delay_in_minutes": 1440,
+      "replicated_pruning_delay_in_minutes": 1440
     }
   }
 }

@@ -95,6 +95,17 @@ class DHService {
             return; // the offer is mine
         }
 
+        const existingBid = await Models.bids.findOne({
+            where: {
+                offer_id: offerId,
+            },
+        });
+
+        if (existingBid) {
+            return;
+        }
+
+
         this.logger.notify(`Offer ${offerId} has been created by ${dcNodeId} on blockchain ${blockchain_id}.`);
         if (dataSetSizeInBytes) {
             const dataSizeInMB = dataSetSizeInBytes / 1000000;
@@ -447,12 +458,10 @@ class DHService {
             // eslint-disable-next-line
             const importId = import_id;
 
-            const verticesPromise = this.graphStorage.findVerticesByImportId(importId);
-            const edgesPromise = this.graphStorage.findEdgesByImportId(importId);
+            const verticesAndEdges = await this.graphStorage
+                .getDatasetWithVerticesAndEdges(importId);
 
-            const values = await Promise.all([verticesPromise, edgesPromise]);
-            const vertices = values[0];
-            const edges = values[1];
+            const { vertices, edges } = verticesAndEdges;
 
             ImportUtilities.unpackKeys(vertices, edges);
 

@@ -778,11 +778,11 @@ class GraphStorage {
 
     /**
      * Remove data set ID in documents from collections
-     * @param dataSetID     Data set ID
+     * @param datasetId     Data set ID
      * @returns {Promise<void>}
      */
-    async removeDataSetId(dataSetID) {
-        return this.db.removeDataSetId(dataSetID);
+    async removeDataset(datasetId) {
+        return this.db.removeDataset(datasetId);
     }
 
     /**

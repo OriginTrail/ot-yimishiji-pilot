@@ -3,6 +3,7 @@ const rc = require('rc');
 const argv = require('minimist')(process.argv.slice(2));
 const { exec, execSync } = require('child_process');
 const path = require('path');
+const mkdirp = require('mkdirp');
 require('dotenv').config();
 
 const Blockchain = require('../modules/Blockchain');
@@ -71,6 +72,9 @@ class RestoreService {
         const identityFiles = this._getIdentityFileNames();
         const certs = this._getCertificateFileNames();
         const dataFiles = this._getDataFileNames();
+        const migrationFiles = this._getMigrationFileNames();
+
+        this._checkFolderStruct();
 
         const res = this._moveFileFromBackupToNode(
             this.config_name,
@@ -79,6 +83,8 @@ class RestoreService {
         if (!res) {
             throw Error(`Cannot restore file ${this.config_name}`);
         }
+
+        this.config = this._loadConfiguration();
 
         for (const file of identityFiles) {
             const res = this
@@ -98,6 +104,10 @@ class RestoreService {
 
         for (const file of certs) {
             this._moveFileFromBackupToNode(file, this.restore_directory, this.certs, false);
+        }
+
+        for (const file of migrationFiles) {
+            this._moveFileFromBackupToNode(file, path.join(this.restore_directory, 'migrations'), path.join(this.config.appDataPath, 'migrations'));
         }
 
         this._moveDatabaseFromBackupToNode();
@@ -183,6 +193,30 @@ class RestoreService {
         }
 
         return dataFileNames;
+    }
+
+
+    _getMigrationFileNames() {
+        const migrationFileNames = [];
+        const directoryPath = path.join(this.restore_directory, 'migrations');
+        if (fs.existsSync(directoryPath)) {
+            fs.readdir(directoryPath, (err, files) => {
+                files.forEach((file) => {
+                    migrationFileNames.push(file);
+                });
+            });
+        }
+        return migrationFileNames;
+    }
+
+    _checkFolderStruct() {
+        if (fs.existsSync(path.join(this.config.appDataPath, 'migrations'))) {
+            console.log(`Directory ${path.join(this.config.appDataPath, 'migrations')} already exists.`);
+            return;
+        }
+
+        console.log(`Creating ${this.config.appDataPath}/migrations directories...`);
+        mkdirp.sync(`${this.config.appDataPath}/migrations`);
     }
 
     _moveFileFromBackupToNode(fileName, backupDir, restoreDir, showErrors = true) {
