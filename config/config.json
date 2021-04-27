@@ -107,6 +107,28 @@
         },
         {
           "blockchain_title": "Ethereum",
+          "network_id": "kovan",
+          "hub_contract_address": "0x8623917Fba97BdfDA15E9a175e248Cd4cC6F6f39",
+          "identity_filepath": "kovan_identity.json",
+          "gas_price": "1000000000",
+          "gas_limit": "2000000",
+          "dc_price_factor" : "3",
+          "dh_price_factor" : "2",
+          "trac_price_in_base_currency" : "0.4"
+        },
+        {
+          "blockchain_title": "Ethereum",
+          "network_id": "rinkeby",
+          "hub_contract_address": "0x1107BDdDC52a15FA3Dd8d38A6174bBc30fc5714A",
+          "identity_filepath": "rinkeby_identity.json",
+          "gas_price": "1000000000",
+          "gas_limit": "2000000",
+          "dc_price_factor" : "3",
+          "dh_price_factor" : "2",
+          "trac_price_in_base_currency" : "0.4"
+        },
+        {
+          "blockchain_title": "Ethereum",
           "network_id": "ganache_7545",
           "hub_contract_address": "0x2B7ca432a13e0D035BC46F0d6bf3cde1E72A10E5",
           "identity_filepath": "ganache_7545_erc725_identity.json",
