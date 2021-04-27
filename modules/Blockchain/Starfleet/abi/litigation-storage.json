@@ -1,0 +1,497 @@
+[
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "hub",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      },
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "litigation",
+    "outputs": [
+      {
+        "name": "litigatorIdentity",
+        "type": "address"
+      },
+      {
+        "name": "requestedObjectIndex",
+        "type": "uint256"
+      },
+      {
+        "name": "requestedBlockIndex",
+        "type": "uint256"
+      },
+      {
+        "name": "requestedData",
+        "type": "bytes32"
+      },
+      {
+        "name": "status",
+        "type": "uint8"
+      },
+      {
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "name": "replacementTask",
+        "type": "bytes32"
+      },
+      {
+        "name": "replacementDifficulty",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "hubAddress",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "newHubAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setHubAddress",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      },
+      {
+        "name": "litigatorIdentity",
+        "type": "address"
+      }
+    ],
+    "name": "setLitigationLitigatorIdentity",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      },
+      {
+        "name": "requestedObjectIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "setLitigationRequestedObjectIndex",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      },
+      {
+        "name": "requestedBlockIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "setLitigationRequestedBlockIndex",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      },
+      {
+        "name": "requestedData",
+        "type": "bytes32"
+      }
+    ],
+    "name": "setLitigationRequestedData",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      },
+      {
+        "name": "hashArray",
+        "type": "bytes32[]"
+      }
+    ],
+    "name": "setLitigationHashArray",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      },
+      {
+        "name": "status",
+        "type": "uint8"
+      }
+    ],
+    "name": "setLitigationStatus",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      },
+      {
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "setLitigationTimestamp",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      },
+      {
+        "name": "replacementTask",
+        "type": "bytes32"
+      }
+    ],
+    "name": "setLitigationReplacementTask",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      },
+      {
+        "name": "replacementDifficulty",
+        "type": "uint256"
+      }
+    ],
+    "name": "setLitigationReplacementDifficulty",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      }
+    ],
+    "name": "getLitigationLitigatorIdentity",
+    "outputs": [
+      {
+        "name": "litigatorIdentity",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      }
+    ],
+    "name": "getLitigationRequestedObjectIndex",
+    "outputs": [
+      {
+        "name": "requestedObjectIndex",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      }
+    ],
+    "name": "getLitigationRequestedBlockIndex",
+    "outputs": [
+      {
+        "name": "requestedBlockIndex",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      }
+    ],
+    "name": "getLitigationRequestedData",
+    "outputs": [
+      {
+        "name": "requestedData",
+        "type": "bytes32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      }
+    ],
+    "name": "getLitigationHashArray",
+    "outputs": [
+      {
+        "name": "hashArray",
+        "type": "bytes32[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      }
+    ],
+    "name": "getLitigationStatus",
+    "outputs": [
+      {
+        "name": "status",
+        "type": "uint8"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      }
+    ],
+    "name": "getLitigationTimestamp",
+    "outputs": [
+      {
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      }
+    ],
+    "name": "getLitigationReplacementTask",
+    "outputs": [
+      {
+        "name": "replacementTask",
+        "type": "bytes32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      }
+    ],
+    "name": "getLitigationReplacementDifficulty",
+    "outputs": [
+      {
+        "name": "replacementDifficulty",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

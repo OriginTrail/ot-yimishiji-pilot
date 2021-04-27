@@ -88,8 +88,10 @@
     "@bugsnag/js": "^7.0.0",
     "@deadcanaries/kadence": "git+https://github.com/OriginTrail/kadence.git",
     "@garbados/merkle-tree": "^1.0.3-alpha",
+    "@truffle/hdwallet-provider": "^1.2.6",
     "ajv": "^5.5.2",
     "arangojs": "^5.8.0",
+    "asn1.js": "latest",
     "async": "^2.6.0",
     "async-retry": "^1.2.1",
     "auto-updater": "git+https://github.com/OriginTrail/auto-updater.git#v1.1.0",
@@ -191,8 +193,7 @@
     "winston-loggly-bulk": "^2.0.3",
     "winston-papertrail": "^1.0.5",
     "xml-js": "^1.6.11",
-    "xml2js": "^0.4.19",
-    "asn1.js": "latest"
+    "xml2js": "^0.4.19"
   },
   "optionalDependencies": {
     "pg": "^8.2.1",

@@ -96,6 +96,16 @@
           "trac_price_in_base_currency" : "0.4"
         },
         {
+          "blockchain_title": "Starfleet",
+          "network_id": "stfl:testnet",
+          "identity_filepath": "starfleet_erc725_identity.json",
+          "gas_limit": "2000000",
+          "gas_price": "100",
+          "dc_price_factor" : "3",
+          "dh_price_factor" : "2",
+          "trac_price_in_base_currency" : "1"
+        },
+        {
           "blockchain_title": "Ethereum",
           "network_id": "ganache_7545",
           "hub_contract_address": "0x2B7ca432a13e0D035BC46F0d6bf3cde1E72A10E5",
