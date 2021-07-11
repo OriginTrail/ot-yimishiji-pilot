@@ -89,6 +89,34 @@ Given(/^(DC|DV|DV2) waits for import to finish$/, { timeout: 1200000 }, async fu
     return promise;
 });
 
+Given(/^(DC|DV|DV2) should skip import for the same dataset$/, { timeout: 1200000 }, async function (targetNode) {
+    this.logger.log(`${targetNode} should skip import for the same dataset.`);
+    expect(targetNode, 'Node type can only be DC, DH or DV.').to.satisfy(val => (val === 'DC' || val === 'DV2' || val === 'DV'));
+    expect(this.state.nodes.length, 'No started nodes').to.be.greaterThan(0);
+    expect(this.state.bootstraps.length, 'No bootstrap nodes').to.be.greaterThan(0);
+
+    const target = this.state[targetNode.toLowerCase()];
+    const host = this.state[targetNode.toLowerCase()].state.node_rpc_url;
+
+    const promise = new Promise((acc) => {
+        target.once('import-duplicated', async () => {
+            if (targetNode.toLowerCase() === 'dc') {
+                if (this.state.lastImport) {
+                    this.state.secondLastImport = this.state.lastImport;
+                }
+
+                this.state.lastImport = await httpApiHelper.apiImportResult(host, this.state.lastImportHandler);
+
+                expect(this.state.lastImport.data.message).to.be.equal('Dataset already imported on the node, importing skipped');
+            }
+            acc();
+        });
+    });
+
+
+    return promise;
+});
+
 
 Given(/^I wait for trail to finish$/, { timeout: 1200000 }, async function () {
     expect(!!this.state.dc, 'DC node not defined. Use other step to define it.').to.be.equal(true);

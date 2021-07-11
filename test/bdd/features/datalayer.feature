@@ -326,3 +326,13 @@ Feature: Data layer related features
     And DC waits for import to finish
     Given DC runs local query consisting of path: "id", value: "test1" and opcode: "EQ"
     Then  The last local query should return otObject from the last imported dataset
+
+  @fifth
+  Scenario: Node should not import same dataset twice
+    And I setup 1 nodes
+    And I start the nodes
+    And I use 1st node as DC
+    And DC imports "importers/json_examples/local-query1.json" as GRAPH
+    And DC waits for import to finish
+    And DC imports "importers/json_examples/local-query1.json" as GRAPH
+    And DC should skip import for the same dataset

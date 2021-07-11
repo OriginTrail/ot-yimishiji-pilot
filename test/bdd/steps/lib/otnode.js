@@ -232,6 +232,8 @@ class OtNode extends EventEmitter {
             this.state.node_url = line.substr(line.search('OT Node listening at ') + 'OT Node listening at '.length, line.length - 1);
         } else if (line.match(/Import complete/gi)) {
             this.emit('import-complete');
+        } else if (line.match(/Import already executed for dataset .+/gi)) {
+            this.emit('import-duplicated');
         } else if (line.match(/Trail complete.*/gi)) {
             this.emit('trail-complete');
         } else if (line.match(/Public key request received/gi)) {
