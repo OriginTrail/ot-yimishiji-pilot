@@ -1,0 +1,63 @@
+[
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "hub",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "hubAddress",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newHubAddress",
+          "type": "address"
+        }
+      ],
+      "name": "setHubAddress",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "offerId",
+          "type": "uint256"
+        },
+        {
+          "name": "identity",
+          "type": "address"
+        },
+        {
+          "name": "parentIdentity",
+          "type": "address"
+        }
+      ],
+      "name": "finalizeOffer",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]

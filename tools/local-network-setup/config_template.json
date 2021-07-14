@@ -22,12 +22,21 @@
   "blockchain": {
     "implementations": [
       {
+        "blockchain_title": "OriginTrail-Parachain",
+        "network_id": "orion",
+        "gas_limit": "2000000",
+        "gas_price": "1000000000",
+        "identity_filepath": "orion_identity.json",
+        "hub_contract_address": "0x0987197628Bb06133B6FA2409eb4cF9FCaFe8d3a",
+        "rpc_server_url": "http://127.0.0.1:7545/"
+      },
+      {
         "blockchain_title": "Ethereum",
         "network_id": "stargazer",
         "gas_limit": "2000000",
         "gas_price": "20000000000",
         "identity_filepath": "stargazer_identity.json",
-        "hub_contract_address": "0x0987197628Bb06133B6FA2409eb4cF9FCaFe8d3a",
+        "hub_contract_address": "0x4762622E3D1EE45eCeCF44dC81a904F17160d9D8",
         "rpc_server_url": "http://127.0.0.1:7545/"
       },
       {
@@ -36,7 +45,7 @@
         "gas_limit": "2000000",
         "gas_price": "20000000000",
         "identity_filepath": "copernicus_identity.json",
-        "hub_contract_address": "0x791ee543738B997B7A125bc849005B62aFD35578",
+        "hub_contract_address": "0x71B3b0306Df1c02e987F225B2431dc90D94C218A",
         "rpc_server_url": "http://127.0.0.1:7545/"
       }
     ]

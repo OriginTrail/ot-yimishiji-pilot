@@ -59,8 +59,9 @@ echo ===== Deploying contracts =====
 echo ===============================
 
 sleep 7
-npm run truffle:deploy:ganache
-npm run truffle:deploy:ganache
+npm run truffle:deploy:otpc:ganache
+npm run truffle:deploy:ethr:ganache
+npm run truffle:deploy:ethr:ganache
 
 echo ================================
 echo ======= Setting up nodes =======

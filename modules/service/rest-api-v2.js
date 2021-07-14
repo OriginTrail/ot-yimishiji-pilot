@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const pjson = require('../../package.json');
+const constants = require('../constants');
 const RestAPIValidator = require('../validator/rest-api-validator');
 const Utilities = require('../Utilities');
 const Models = require('../../models');
@@ -347,8 +348,12 @@ class RestAPIServiceV2 {
                         try {
                             const walletBaseBalance = await blockchain
                                 .getWalletBaseBalance(node_wallet, blockchain_id).response;
-                            const walletTokenBalance = await blockchain
-                                .getWalletTokenBalance(node_wallet, blockchain_id).response;
+                            let walletTokenBalance;
+                            if (blockchain_title !==
+                                constants.BLOCKCHAIN_TITLE.OriginTrailParachain) {
+                                walletTokenBalance = await blockchain
+                                    .getWalletTokenBalance(node_wallet, blockchain_id).response;
+                            }
 
                             const profile =
                                 await blockchain.getProfile(identity, blockchain_id).response;
@@ -360,8 +365,7 @@ class RestAPIServiceV2 {
                                 blockchain_title,
                                 wallet: {
                                     address: node_wallet,
-                                    ethBalance: humanReadable ? Blockchain.fromWei(blockchain_title, walletBaseBalance, 'ether') : walletBaseBalance,
-                                    tokenBalance: humanReadable ? Blockchain.fromWei(blockchain_title, walletTokenBalance, 'ether') : walletTokenBalance,
+                                    baseBalance: humanReadable ? Blockchain.fromWei(blockchain_title, walletBaseBalance, 'ether') : walletBaseBalance,
                                 },
                                 profile: {
                                     address: identity,
@@ -370,6 +374,13 @@ class RestAPIServiceV2 {
                                     minimalStake: humanReadable ? Blockchain.fromWei(blockchain_title, profileMinimalStake, 'ether') : profileMinimalStake,
                                 },
                             };
+
+                            if (walletTokenBalance) {
+                                body.wallet.tokenBalance = humanReadable
+                                    ? Blockchain.fromWei(blockchain_title, walletTokenBalance, 'ether')
+                                    : walletTokenBalance;
+                            }
+
                             resolve(body);
                         } catch (error) {
                             reject(error);

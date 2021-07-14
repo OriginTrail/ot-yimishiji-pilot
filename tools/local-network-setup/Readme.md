@@ -35,7 +35,7 @@ Usage
 
 ## Specifying the number of nodes
 
-The LNS tool deploys 4 nodes, each connected to two blockchain implementations which are running on a local ganache process.
+The LNS tool deploys 4 nodes, each connected to three blockchain implementations which are running on a local ganache process.
 You can specify to run anywhere between one and ten nodes with the `--nodes` parameter.
 
 ```bash
@@ -57,8 +57,9 @@ If you want to edit a single node's configuration, you can do it in two ways:
 1. Before you start the nodes, edit the `generate_config_files.js` with a specific condition. For example, if you wanted to set the fifth node to reject all offers you'd add something like the following:
 ```js
 if (node_name === 'DH4') {
-    savedConfig.blockchain.implementations[0].dh_price_factor = "10000000";
-    savedConfig.blockchain.implementations[1].dh_price_factor = "10000000";
+    parsedTemplate.blockchain.implementations[0].dh_price_factor = "10000000";
+    parsedTemplate.blockchain.implementations[1].dh_price_factor = "10000000";
+    parsedTemplate.blockchain.implementations[2].dh_price_factor = "10000000";
 }
 ```
 

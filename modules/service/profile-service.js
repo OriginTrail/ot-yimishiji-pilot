@@ -72,29 +72,32 @@ class ProfileService {
             initialTokenAmount = new BN(profileMinStake, 10);
         }
 
-        let approvalIncreased = false;
-        do {
-            try {
-                // eslint-disable-next-line no-await-in-loop
-                await this.blockchain
-                    .increaseProfileApproval(initialTokenAmount, blockchainId, true).response;
-                approvalIncreased = true;
-            } catch (error) {
-                if (error.message.includes('Gas price higher than maximum allowed price')) {
-                    this.logger.warn('Current average gas price is too high, to force profile' +
-                        ' creation increase max_allowed_gas_price in your configuration file and reset the node.' +
-                        ' Retrying in 30 minutes...');
+        if (this.blockchain.getBlockchainTitle(blockchainId, true).response
+            !== constants.BLOCKCHAIN_TITLE.OriginTrailParachain) {
+            let approvalIncreased = false;
+            do {
+                try {
                     // eslint-disable-next-line no-await-in-loop
-                    await new Promise((resolve) => {
-                        setTimeout(() => {
-                            resolve();
-                        }, constants.GAS_PRICE_VALIDITY_TIME_IN_MILLS);
-                    });
-                } else {
-                    throw error;
+                    await this.blockchain
+                        .increaseProfileApproval(initialTokenAmount, blockchainId, true).response;
+                    approvalIncreased = true;
+                } catch (error) {
+                    if (error.message.includes('Gas price higher than maximum allowed price')) {
+                        this.logger.warn('Current average gas price is too high, to force profile' +
+                            ' creation increase max_allowed_gas_price in your configuration file and reset the node.' +
+                            ' Retrying in 30 minutes...');
+                        // eslint-disable-next-line no-await-in-loop
+                        await new Promise((resolve) => {
+                            setTimeout(() => {
+                                resolve();
+                            }, constants.GAS_PRICE_VALIDITY_TIME_IN_MILLS);
+                        });
+                    } else {
+                        throw error;
+                    }
                 }
-            }
-        } while (approvalIncreased === false);
+            } while (approvalIncreased === false);
+        }
 
         // set empty identity if there is none
         let identity = identityExists ? profileIdentity : new BN(0, 16);

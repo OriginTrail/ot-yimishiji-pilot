@@ -1,0 +1,291 @@
+[
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "hasApproval",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+        "signature": "0x01278eae"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "identityApproved",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+        "signature": "0x22471e16"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+        "signature": "0x8da5cb5b"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "",
+                "type": "bytes20"
+            }
+        ],
+        "name": "nodeApproved",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+        "signature": "0xbf190db9"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "signature": "0xf2fde38b"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "allNodes",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes20"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+        "signature": "0xfe72ae13"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "nodeId",
+                "type": "bytes20"
+            }
+        ],
+        "name": "NodeApproved",
+        "type": "event",
+        "signature": "0xf7521880b0f9408d030feb29ac3c9e02abad64c074936ee468aac417cc731b18"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "nodeId",
+                "type": "bytes20"
+            }
+        ],
+        "name": "NodeRemoved",
+        "type": "event",
+        "signature": "0x2f73372f3632d6b888bdc5473ddc2111f50e72b65b75aaffb6061ae61d01485a"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "previousOwner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event",
+        "signature": "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "identity",
+                "type": "address"
+            }
+        ],
+        "name": "identityHasApproval",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+        "signature": "0x97fa8406"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "nodeId",
+                "type": "bytes20"
+            }
+        ],
+        "name": "nodeHasApproval",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+        "signature": "0x0e38ed3c"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getAllNodes",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes20[]"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+        "signature": "0xa1174e7d"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getNodeStatuses",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool[]"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+        "signature": "0x89a367f9"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "identity",
+                "type": "address"
+            },
+            {
+                "name": "nodeId",
+                "type": "bytes20"
+            },
+            {
+                "name": "nodeIndex",
+                "type": "uint256"
+            }
+        ],
+        "name": "approve",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "signature": "0x70a59445"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "identity",
+                "type": "address"
+            },
+            {
+                "name": "nodeId",
+                "type": "bytes20"
+            },
+            {
+                "name": "nodeIndex",
+                "type": "uint256"
+            }
+        ],
+        "name": "removeApproval",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "signature": "0x6850e7fb"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "identity",
+                "type": "address"
+            },
+            {
+                "name": "newApproval",
+                "type": "bool"
+            }
+        ],
+        "name": "setIdentityApproval",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "signature": "0xfeb5b2e9"
+    }
+]

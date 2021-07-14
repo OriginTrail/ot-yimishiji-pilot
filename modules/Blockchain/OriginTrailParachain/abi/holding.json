@@ -1,0 +1,365 @@
+[
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "hub",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x365a86fc"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "version",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x54fd4d50"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "difficultyOverride",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x67ebbdc6"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x8da5cb5b"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xf2fde38b"
+  },
+  {
+    "inputs": [
+      {
+        "name": "hubAddress",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+    "signature": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "dataSetId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "dcNodeId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "task",
+        "type": "bytes32"
+      }
+    ],
+    "name": "OfferTask",
+    "type": "event",
+    "signature": "0xc02335f4c444cce217a60853f6fd34ba3e698ba52c208883d975253732055495"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "dataSetId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "dcNodeId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "holdingTimeInMinutes",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "dataSetSizeInBytes",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "tokenAmountPerHolder",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "litigationIntervalInMinutes",
+        "type": "uint256"
+      }
+    ],
+    "name": "OfferCreated",
+    "type": "event",
+    "signature": "0xb9705efa5b8a53b16627c24baa6d9acb1767218fe3bcfeb0b4e26a4325ef79cf"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "holder1",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "holder2",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "holder3",
+        "type": "address"
+      }
+    ],
+    "name": "OfferFinalized",
+    "type": "event",
+    "signature": "0xeac1e15fac392f7eb69fb5accdf5e9892330f41cd8fa89933c2d2c8c68e4d4a7"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "holder",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "PaidOut",
+    "type": "event",
+    "signature": "0xf4292e0ae547c949263a88899ebcdac1a5493bef4f206b7592b5a7de68f4c0de"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event",
+    "signature": "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "newHubAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setHubAddress",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xc7eb4522"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "identity",
+        "type": "address"
+      },
+      {
+        "name": "dataSetId",
+        "type": "uint256"
+      },
+      {
+        "name": "dataRootHash",
+        "type": "uint256"
+      },
+      {
+        "name": "redLitigationHash",
+        "type": "uint256"
+      },
+      {
+        "name": "greenLitigationHash",
+        "type": "uint256"
+      },
+      {
+        "name": "blueLitigationHash",
+        "type": "uint256"
+      },
+      {
+        "name": "dcNodeId",
+        "type": "uint256"
+      },
+      {
+        "name": "holdingTimeInMinutes",
+        "type": "uint256"
+      },
+      {
+        "name": "tokenAmountPerHolder",
+        "type": "uint256"
+      },
+      {
+        "name": "dataSetSizeInBytes",
+        "type": "uint256"
+      },
+      {
+        "name": "litigationIntervalInMinutes",
+        "type": "uint256"
+      }
+    ],
+    "name": "createOffer",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x212c3925"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "identity",
+        "type": "address"
+      },
+      {
+        "name": "offerId",
+        "type": "uint256"
+      },
+      {
+        "name": "shift",
+        "type": "uint256"
+      },
+      {
+        "name": "confirmation1",
+        "type": "bytes"
+      },
+      {
+        "name": "confirmation2",
+        "type": "bytes"
+      },
+      {
+        "name": "confirmation3",
+        "type": "bytes"
+      },
+      {
+        "name": "encryptionType",
+        "type": "uint8[]"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address[]"
+      },
+      {
+        "name": "parentIdentity",
+        "type": "address"
+      }
+    ],
+    "name": "finalizeOffer",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x1f0a07df"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "identity",
+        "type": "address"
+      },
+      {
+        "name": "offerId",
+        "type": "uint256"
+      }
+    ],
+    "name": "payOut",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x0221038a"
+  }
+]

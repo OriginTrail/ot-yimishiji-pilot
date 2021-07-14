@@ -20,6 +20,7 @@ modules/Blockchain/Ethereum/test/development.test.js
 modules/Blockchain/Ethereum/build/
 modules/Blockchain/XDai/build/
 modules/Blockchain/XDai/test/development.test.js
+modules/Blockchain/OriginTrailParachain/build/
 hidden_service
 !*.gitkeep
 Envoy.blade.php
