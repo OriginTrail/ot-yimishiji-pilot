@@ -620,6 +620,54 @@ class DCController {
         res.status(200);
         res.send(response);
     }
+
+    async getMerkleProofs(req, res) {
+        this.logger.api('POST: Get Merkle proofs request received.');
+
+        if (req.body === undefined) {
+            res.status(400);
+            res.send({
+                message: 'Bad request',
+            });
+            return;
+        }
+
+
+        if (!(req.body instanceof Array)) {
+            req.body = Utilities.arrayze(req.body);
+        }
+
+        try {
+            const promises = [];
+
+            for (const obj of req.body) {
+                if (obj.object_ids === undefined ||
+                obj.dataset_id === undefined) {
+                    res.status(400);
+                    res.send({
+                        message: 'Bad request',
+                    });
+                    return;
+                }
+
+                const { object_ids, dataset_id } = obj;
+                promises.push(this.importService
+                    .getMerkleProofs(Utilities.arrayze(object_ids), dataset_id));
+            }
+
+
+            let response = await Promise.all(promises);
+            response = Array.prototype.concat.apply([], response);
+
+            res.status(200);
+            res.send(response);
+        } catch (e) {
+            res.status(404);
+            res.send({
+                message: 'Data not found',
+            });
+        }
+    }
 }
 
 module.exports = DCController;

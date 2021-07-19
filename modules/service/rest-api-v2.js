@@ -121,7 +121,7 @@ class RestAPIServiceV2 {
         });
 
         server.post(`/api/${this.version_id}/get_merkle_proofs`, async (req, res) => {
-            await this._getMerkleProofs(req, res);
+            await this.dcController.getMerkleProofs(req, res);
         });
 
         server.post(`/api/${this.version_id}/network/query`, async (req, res) => {
@@ -405,35 +405,6 @@ class RestAPIServiceV2 {
                 message,
             });
         });
-    }
-
-    async _getMerkleProofs(req, res) {
-        this.logger.api('POST: Get Merkle proofs request received.');
-
-        if (req.body === undefined) {
-            res.status(400);
-            res.send({
-                message: 'Bad request',
-            });
-            return;
-        }
-
-        if (req.body.object_ids === undefined ||
-            req.body.dataset_id === undefined) {
-            res.status(400);
-            res.send({
-                message: 'Bad request',
-            });
-            return;
-        }
-
-        const { object_ids, dataset_id } = req.body;
-
-        const response =
-            await this.importService.getMerkleProofs(Utilities.arrayze(object_ids), dataset_id);
-
-        res.status(200);
-        res.send(response);
     }
 
     async _networkQuery(req, res) {
