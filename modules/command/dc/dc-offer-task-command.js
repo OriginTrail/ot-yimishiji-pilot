@@ -11,6 +11,7 @@ const constants = require('../../constants');
 class DcOfferTaskCommand extends Command {
     constructor(ctx) {
         super(ctx);
+        this.config = ctx.config;
         this.logger = ctx.logger;
         this.dcService = ctx.dcService;
         this.replicationService = ctx.replicationService;
@@ -38,53 +39,58 @@ class DcOfferTaskCommand extends Command {
                 finished: 0,
             },
         });
+
         if (event) {
-            event.finished = 1;
-            await event.save({ fields: ['finished'] });
+            const { dcNodeId } = JSON.parse(event.data);
+            if (dcNodeId === Utilities.normalizeHex(this.config.identity.padStart(64, '0'))) {
+                event.finished = 1;
+                await event.save({ fields: ['finished'] });
 
-            const data = JSON.parse(event.data);
-            const {
-                task: eventTask,
-            } = data;
+                const data = JSON.parse(event.data);
+                const {
+                    task: eventTask,
+                } = data;
 
-            let {
-                offerId: eventOfferId,
-            } = data;
-            eventOfferId = Utilities.normalizeHex(eventOfferId);
+                let {
+                    offerId: eventOfferId,
+                } = data;
+                eventOfferId = Utilities.normalizeHex(eventOfferId);
 
-            const offer = await Models.offers.findOne({ where: { id: internalOfferId } });
-            if (!offer) {
-                throw new Error(`Offer with ID ${eventOfferId} cannot be found.`);
-            }
-            offer.task = eventTask;
-            offer.offer_id = eventOfferId;
-            offer.replication_start_timestamp = Date.now().toString();
-            offer.status = 'STARTED';
-            offer.message = 'Offer has been successfully started. Waiting for DHs...';
-            await offer.save({
-                fields: ['task', 'offer_id', 'replication_start_timestamp', 'status', 'message'],
-            });
+                const offer = await Models.offers.findOne({ where: { id: internalOfferId } });
+                if (!offer) {
+                    throw new Error(`Offer with ID ${eventOfferId} cannot be found.`);
+                }
+                offer.task = eventTask;
+                offer.offer_id = eventOfferId;
+                offer.replication_start_timestamp = Date.now()
+                    .toString();
+                offer.status = 'STARTED';
+                offer.message = 'Offer has been successfully started. Waiting for DHs...';
+                await offer.save({
+                    fields: ['task', 'offer_id', 'replication_start_timestamp', 'status', 'message'],
+                });
 
-            this.remoteControl.offerUpdate({
-                id: internalOfferId,
-            });
-            const handler = await Models.handler_ids.findOne({
-                where: { handler_id },
-            });
-            const handler_data = JSON.parse(handler.data);
-            handler_data.offer_id = offer.offer_id;
-            handler_data.status = 'WAITING_FOR_HOLDERS';
-            await Models.handler_ids.update(
-                {
-                    data: JSON.stringify(handler_data),
-                },
-                {
+                this.remoteControl.offerUpdate({
+                    id: internalOfferId,
+                });
+                const handler = await Models.handler_ids.findOne({
                     where: { handler_id },
-                },
-            );
+                });
+                const handler_data = JSON.parse(handler.data);
+                handler_data.offer_id = offer.offer_id;
+                handler_data.status = 'WAITING_FOR_HOLDERS';
+                await Models.handler_ids.update(
+                    {
+                        data: JSON.stringify(handler_data),
+                    },
+                    {
+                        where: { handler_id },
+                    },
+                );
 
-            this.logger.trace(`Offer successfully started for data set ${dataSetId} on blockchain ${blockchain_id}. Offer ID ${eventOfferId}. Internal offer ID ${internalOfferId}.`);
-            return this.continueSequence(this.pack(command.data), command.sequence);
+                this.logger.trace(`Offer successfully started for data set ${dataSetId} on blockchain ${blockchain_id}. Offer ID ${eventOfferId}. Internal offer ID ${internalOfferId}.`);
+                return this.continueSequence(this.pack(command.data), command.sequence);
+            }
         }
 
         await Models.handler_ids.update({ timestamp: Date.now() }, { where: { handler_id } });
