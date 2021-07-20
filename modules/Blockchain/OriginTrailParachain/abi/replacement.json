@@ -1,0 +1,91 @@
+[
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "hub",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "name": "holderIdentity",
+        "type": "address"
+      },
+      {
+        "name": "litigatorIdentity",
+        "type": "address"
+      },
+      {
+        "name": "shift",
+        "type": "uint256"
+      },
+      {
+        "name": "confirmation1",
+        "type": "bytes"
+      },
+      {
+        "name": "confirmation2",
+        "type": "bytes"
+      },
+      {
+        "name": "confirmation3",
+        "type": "bytes"
+      },
+      {
+        "name": "replacementHolderIdentity",
+        "type": "address[]"
+      }
+    ],
+    "name": "replaceHolder",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "hubAddress",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "offerId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "challengerIdentity",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "chosenHolder",
+        "type": "address"
+      }
+    ],
+    "name": "ReplacementCompleted",
+    "type": "event"
+  }
+]

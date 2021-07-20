@@ -1,5 +1,6 @@
-const Ethereum = require('./Blockchain/Ethereum/index.js');
-const XDai = require('./Blockchain/XDai/index.js');
+const Ethereum = require('./Blockchain/Ethereum');
+const XDai = require('./Blockchain/XDai');
+const OriginTrailParachain = require('./Blockchain/OriginTrailParachain');
 const uuidv4 = require('uuid/v4');
 const Op = require('sequelize/lib/operators');
 const deepExtend = require('deep-extend');
@@ -7,6 +8,7 @@ const deepExtend = require('deep-extend');
 const Utilities = require('./Utilities');
 const Models = require('../models');
 const configjson = require('../config/config.json');
+const constants = require('./constants');
 
 const defaultBlockchainConfig = Utilities.copyObject(configjson[
     process.env.NODE_ENV &&
@@ -33,11 +35,14 @@ class Blockchain {
             const implementation_configuration = this.config.implementations[i];
 
             switch (implementation_configuration.blockchain_title) {
-            case 'Ethereum':
+            case constants.BLOCKCHAIN_TITLE.Ethereum:
                 this.blockchain[i] = new Ethereum(ctx, implementation_configuration);
                 break;
-            case 'xDai':
+            case constants.BLOCKCHAIN_TITLE.XDai:
                 this.blockchain[i] = new XDai(ctx, implementation_configuration);
+                break;
+            case constants.BLOCKCHAIN_TITLE.OriginTrailParachain:
+                this.blockchain[i] = new OriginTrailParachain(ctx, implementation_configuration);
                 break;
             default:
                 this.log.error('Unsupported blockchain', implementation_configuration.blockchain_title);
@@ -241,12 +246,20 @@ class Blockchain {
         };
     }
 
+    createIdentity(managementWallet, blockchain_id, showUninitialized = false) {
+        const implementation = this._getImplementationFromId(blockchain_id, showUninitialized);
+        return {
+            blockchain_id: implementation.getBlockchainId(),
+            response: implementation.createIdentity(managementWallet),
+        };
+    }
+
     /**
      * Creates node profile on the Bidding contract
      * @param managementWallet - Management wallet
      * @param profileNodeId - Network node ID
-     * @param initialBalance - Initial profile balance
-     * @param isSender725 - Is sender ERC 725?
+     * @param {Object<BigNumber>} initialBalance - Initial profile balance
+     * @param {Boolean} hasERC725 - Does sender already have an ERC 725 identity?
      * @param blockchainIdentity - ERC 725 identity (empty if there is none)
      * @param blockchain_id - Blockchain implementation to use
      * @param {Boolean} showUninitialized - Return implementations even if they aren't initialized
@@ -256,7 +269,7 @@ class Blockchain {
         managementWallet,
         profileNodeId,
         initialBalance,
-        isSender725,
+        hasERC725,
         blockchainIdentity,
         blockchain_id,
         showUninitialized = false,
@@ -266,7 +279,7 @@ class Blockchain {
             blockchain_id: implementation.getBlockchainId(),
             response: implementation.createProfile(
                 managementWallet,
-                profileNodeId, initialBalance, isSender725,
+                profileNodeId, initialBalance, hasERC725,
                 blockchainIdentity,
             ),
         };
@@ -1343,8 +1356,8 @@ class Blockchain {
     /**
      * Returns blockchain title from configuration
      */
-    getBlockchainTitle(blockchain_id) {
-        const implementation = this._getImplementationFromId(blockchain_id);
+    getBlockchainTitle(blockchain_id, showUninitialized = false) {
+        const implementation = this._getImplementationFromId(blockchain_id, showUninitialized);
         return {
             blockchain_id: implementation.getBlockchainId(),
             response: implementation.getBlockchainTitle(),

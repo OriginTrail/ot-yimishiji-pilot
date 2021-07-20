@@ -1,3 +1,5 @@
+require('dotenv').config({ path: `${__dirname}/../../.env` });
+
 const path = require('path');
 const fs = require('fs');
 const { execSync } = require('child_process');
@@ -46,34 +48,63 @@ for (let i = 0; i < number_of_nodes; i += 1) {
     parsedTemplate.database.database = `origintrail-${node_name}`;
     // parsedTemplate.disableAutoPayouts = true;
 
-    parsedTemplate.blockchain.implementations[0].node_wallet = wallets[2 * i].wallet;
-    parsedTemplate.blockchain.implementations[0].node_private_key = wallets[2 * i].privateKey;
-    parsedTemplate.blockchain.implementations[0].management_wallet = wallets[2 * i].wallet;
-
-    parsedTemplate.blockchain.implementations[1].node_wallet = wallets[(2 * i) + 1].wallet;
-    parsedTemplate.blockchain.implementations[1].node_private_key = wallets[(2 * i) + 1].privateKey;
-    parsedTemplate.blockchain.implementations[1].management_wallet = wallets[(2 * i) + 1].wallet;
-
-    if (node_name === 'DH1') {
-        parsedTemplate.blockchain.implementations.reverse();
+    if (i === 0) {
+        parsedTemplate.blockchain.implementations[0].node_wallet =
+            process.env.PARACHAIN_ADDRESS;
+        parsedTemplate.blockchain.implementations[0].node_private_key =
+            process.env.PARACHAIN_PRIVATE_KEY;
+        parsedTemplate.blockchain.implementations[0].management_wallet =
+            process.env.PARACHAIN_ADDRESS;
+    } else if (i === 1) {
+        parsedTemplate.blockchain.implementations[0].node_wallet =
+            process.env.PARACHAIN_ADDRESS_1;
+        parsedTemplate.blockchain.implementations[0].node_private_key =
+            process.env.PARACHAIN_PRIVATE_KEY_1;
+        parsedTemplate.blockchain.implementations[0].management_wallet =
+            process.env.PARACHAIN_ADDRESS_1;
+    } else if (i === 2) {
+        parsedTemplate.blockchain.implementations[0].node_wallet =
+            process.env.PARACHAIN_ADDRESS_2;
+        parsedTemplate.blockchain.implementations[0].node_private_key =
+            process.env.PARACHAIN_PRIVATE_KEY_2;
+        parsedTemplate.blockchain.implementations[0].management_wallet =
+            process.env.PARACHAIN_ADDRESS_2;
+    } else if (i === 3) {
+        parsedTemplate.blockchain.implementations[0].node_wallet =
+            process.env.PARACHAIN_ADDRESS_3;
+        parsedTemplate.blockchain.implementations[0].node_private_key =
+            process.env.PARACHAIN_PRIVATE_KEY_3;
+        parsedTemplate.blockchain.implementations[0].management_wallet =
+            process.env.PARACHAIN_ADDRESS_3;
     }
 
+    parsedTemplate.blockchain.implementations[0].rpc_server_url =
+        process.env.PARACHAIN_ACCESS_KEY;
+    parsedTemplate.blockchain.implementations[0].hub_contract_address =
+        process.env.PARACHAIN_HUB_ADDRESS;
+
     // Uncomment if you want nodes to have different blockchain setups and for some nodes to be DVs
-    // if (node_name === 'DH2' || node_name === 'DH5') {
+    // if (node_name === 'DH2' || node_name === 'DH6') {
     //     parsedTemplate.blockchain.implementations.splice(0,1);
-    //     if (node_name === 'DH5') {
-    //         parsedTemplate.blockchain.implementations[0].dh_price_factor = '10000000';
-    //     }
-    // } else if (node_name === 'DH3' || node_name === 'DH6') {
-    //     parsedTemplate.blockchain.implementations.splice(1,1);
     //     if (node_name === 'DH6') {
     //         parsedTemplate.blockchain.implementations[0].dh_price_factor = '10000000';
     //     }
-    // } else if (node_name === 'DH4' || node_name === 'DH7') {
+    // } else if (node_name === 'DH3' || node_name === 'DH7') {
+    //     parsedTemplate.blockchain.implementations.splice(1,1);
+    //     if (node_name === 'DH7') {
+    //         parsedTemplate.blockchain.implementations[0].dh_price_factor = '10000000';
+    //     }
+    // } else if (node_name === 'DH4' || node_name === 'DH8') {
+    //     parsedTemplate.blockchain.implementations.splice(1,1);
+    //     if (node_name === 'DH7') {
+    //         parsedTemplate.blockchain.implementations[0].dh_price_factor = '10000000';
+    //     }
+    // } else if (node_name === 'DH5' || node_name === 'DH9') {
     //     parsedTemplate.blockchain.implementations.reverse();
-    //     if (node_name === 'DH4') {
+    //     if (node_name === 'DH9') {
     //         parsedTemplate.blockchain.implementations[0].dh_price_factor = '10000000';
     //         parsedTemplate.blockchain.implementations[1].dh_price_factor = '10000000';
+    //         parsedTemplate.blockchain.implementations[2].dh_price_factor = '10000000';
     //     }
     // }
 
@@ -81,6 +112,7 @@ for (let i = 0; i < number_of_nodes; i += 1) {
     // if (node_name === 'DH4') {
     //     parsedTemplate.blockchain.implementations[0].dh_price_factor = '10000000';
     //     parsedTemplate.blockchain.implementations[1].dh_price_factor = '10000000';
+    //     parsedTemplate.blockchain.implementations[2].dh_price_factor = '10000000';
     // }
 
     fs.writeFileSync(`${configPath}`, JSON.stringify(parsedTemplate, null, 2));

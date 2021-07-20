@@ -465,7 +465,7 @@ class Web3Implementation {
      */
     getWalletBaseBalance(wallet) {
         return new Promise((resolve, reject) => {
-            this.logger.trace(`[${this.getBlockchainId()}] Getting ETH balance by wallet ${wallet}`);
+            this.logger.trace(`[${this.getBlockchainId()}] Getting base balance by wallet ${wallet}`);
             this.web3.eth.getBalance(wallet)
                 .then((res) => {
                     resolve(res);
@@ -476,11 +476,11 @@ class Web3Implementation {
     }
 
     /**
-     * Creates node profile on the Bidding contract
+     * Creates node profile on the Profile contract
      * @param managementWallet - Management wallet
      * @param profileNodeId - Network node ID
-     * @param initialBalance - Initial profile balance
-     * @param isSender725 - Is sender ERC 725?
+     * @param {Object<BigNumber>} initialBalance - Initial profile balance
+     * @param {Boolean} hasERC725 - Does sender already have an ERC 725 identity?
      * @param blockchainIdentity - ERC 725 identity (empty if there is none)
      * @return {Promise<any>}
      */
@@ -488,7 +488,7 @@ class Web3Implementation {
         managementWallet,
         profileNodeId,
         initialBalance,
-        isSender725,
+        hasERC725,
         blockchainIdentity,
     ) {
         const gasPrice = await this.getGasPrice();
@@ -497,13 +497,13 @@ class Web3Implementation {
             gasPrice: this.web3.utils.toHex(gasPrice),
             to: this.profileContractAddress,
         };
-        this.logger.trace(`[${this.getBlockchainId()}] CreateProfile(${managementWallet}, ${profileNodeId}, ${initialBalance}, ${isSender725}, ${blockchainIdentity})`);
+        this.logger.trace(`[${this.getBlockchainId()}] CreateProfile(${managementWallet}, ${profileNodeId}, ${initialBalance}, ${hasERC725}, ${blockchainIdentity})`);
         return this.transactions.queueTransaction(
             this.profileContractAbi, 'createProfile',
             [
                 managementWallet,
                 Utilities.normalizeHex(profileNodeId),
-                initialBalance, isSender725, blockchainIdentity,
+                initialBalance, hasERC725, blockchainIdentity,
             ], options,
         );
     }

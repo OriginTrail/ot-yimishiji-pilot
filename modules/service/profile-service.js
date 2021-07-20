@@ -59,7 +59,7 @@ class ProfileService {
     }
 
     async createAndSaveNewProfile(profileIdentity, blockchainId) {
-        const identityExists = !!profileIdentity;
+        let identityExists = !!profileIdentity;
         const profileMinStake = await this.blockchain
             .getProfileMinimumStake(blockchainId, true).response;
         this.logger.info(`Minimum stake for profile registration is ${profileMinStake}, for blockchain id: ${blockchainId}`);
@@ -72,35 +72,53 @@ class ProfileService {
             initialTokenAmount = new BN(profileMinStake, 10);
         }
 
-        let approvalIncreased = false;
-        do {
-            try {
-                // eslint-disable-next-line no-await-in-loop
-                await this.blockchain
-                    .increaseProfileApproval(initialTokenAmount, blockchainId, true).response;
-                approvalIncreased = true;
-            } catch (error) {
-                if (error.message.includes('Gas price higher than maximum allowed price')) {
-                    this.logger.warn('Current average gas price is too high, to force profile' +
-                        ' creation increase max_allowed_gas_price in your configuration file and reset the node.' +
-                        ' Retrying in 30 minutes...');
+        const blockchain_title = this.blockchain.getBlockchainTitle(blockchainId, true).response;
+        if (blockchain_title !== constants.BLOCKCHAIN_TITLE.OriginTrailParachain) {
+            let approvalIncreased = false;
+            do {
+                try {
                     // eslint-disable-next-line no-await-in-loop
-                    await new Promise((resolve) => {
-                        setTimeout(() => {
-                            resolve();
-                        }, constants.GAS_PRICE_VALIDITY_TIME_IN_MILLS);
-                    });
-                } else {
-                    throw error;
+                    await this.blockchain
+                        .increaseProfileApproval(initialTokenAmount, blockchainId, true).response;
+                    approvalIncreased = true;
+                } catch (error) {
+                    if (error.message.includes('Gas price higher than maximum allowed price')) {
+                        this.logger.warn('Current average gas price is too high, to force profile' +
+                            ' creation increase max_allowed_gas_price in your configuration file and reset the node.' +
+                            ' Retrying in 30 minutes...');
+                        // eslint-disable-next-line no-await-in-loop
+                        await new Promise((resolve) => {
+                            setTimeout(() => {
+                                resolve();
+                            }, constants.GAS_PRICE_VALIDITY_TIME_IN_MILLS);
+                        });
+                    } else {
+                        throw error;
+                    }
                 }
-            }
-        } while (approvalIncreased === false);
+            } while (approvalIncreased === false);
+        }
+
+
+        const { node_wallet, management_wallet } =
+            this.blockchain.getWallet(blockchainId, true).response;
+
+        if (blockchain_title === constants.BLOCKCHAIN_TITLE.OriginTrailParachain
+            && !identityExists) {
+            const receipt = await this.blockchain
+                .createIdentity(management_wallet, blockchainId, true).response;
+
+            this.blockchain.saveIdentity(receipt.contractAddress, blockchainId, true);
+            this.logger.notify(`Identity created for node ${this.config.identity}. Identity is ${receipt.contractAddress}. For blockchain id: ${blockchainId}.`);
+
+            profileIdentity = receipt.contractAddress;
+            identityExists = true;
+            await Utilities.sleepForMilliseconds(25000);
+        }
 
         // set empty identity if there is none
         let identity = identityExists ? profileIdentity : new BN(0, 16);
 
-        const { node_wallet, management_wallet } =
-            this.blockchain.getWallet(blockchainId, true).response;
         let createProfileCalled = false;
         do {
             try {

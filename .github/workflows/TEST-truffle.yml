@@ -26,8 +26,10 @@ jobs:
       - run: sudo chmod -R 777 $CUCUMBER_ARTIFACTS_DIR
       - run: sudo ./setup_arangodb.sh
       - run: cp .origintrail_noderc.travis .origintrail_noderc
-      - run: npm run ganache > $ARTIFACTS_DIR/run-ganache1.log & npm run truffle:test > $ARTIFACTS_DIR/truffle-test.log;
-      - run: npm run ganache > $ARTIFACTS_DIR/run-ganache2.log & npm run truffle:deploy:ganache > $ARTIFACTS_DIR/truffle-migrate.log;
+      - run: npm run ganache > $ARTIFACTS_DIR/run-ganache1.log & npm run truffle:test:ethr > $ARTIFACTS_DIR/truffle-test-ethr.log;
+      - run: npm run ganache > $ARTIFACTS_DIR/run-ganache1.log & npm run truffle:test:otpc > $ARTIFACTS_DIR/truffle-test-otpc.log;
+      - run: npm run ganache > $ARTIFACTS_DIR/run-ganache2.log & npm run truffle:deploy:ethr:ganache > $ARTIFACTS_DIR/truffle-migrate-ethr.log;
+      - run: npm run ganache > $ARTIFACTS_DIR/run-ganache2.log & npm run truffle:deploy:otpc:ganache > $ARTIFACTS_DIR/truffle-migrate-otpc.log;
       - uses: actions/upload-artifact@v2
         if: ${{ always() }}
         with:

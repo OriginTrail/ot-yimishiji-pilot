@@ -119,7 +119,8 @@ class DCService {
         const profileMinStake =
             new BN(await this.blockchain.getProfileMinimumStake(blockchain_id).response, 10);
         const excluded = await Promise.all(identities.map(async (identity) => {
-            const profile = await this.blockchain.getProfile(identity, blockchain_id).response;
+            const profile = await this.blockchain
+                .getProfile(Utilities.normalizeHex(identity), blockchain_id).response;
             const profileStake = new BN(profile.stake, 10);
             const profileStakeReserved = new BN(profile.stakeReserved, 10);
 
@@ -136,7 +137,7 @@ class DCService {
                 }
             }
             if (remainder) {
-                return identity;
+                return Utilities.normalizeHex(identity);
             }
             return null;
         }));

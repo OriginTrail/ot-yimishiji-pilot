@@ -71,6 +71,20 @@
           "plugins": []
         },
         {
+          "blockchain_title": "OriginTrail-Parachain",
+          "network_id": "orion",
+          "blockchain_id": 2160,
+          "rpc_server_url": "http://139.59.150.89:9933",
+          "identity_filepath": "orion_erc725_identity.json",
+          "hub_contract_address": "0x5c4242beB94dE30b922f57241f1D02f36e906915",
+          "gas_limit": "6000000",
+          "initial_deposit_amount": "5000",
+          "gas_price": "100",
+          "dc_price_factor" : "3",
+          "dh_price_factor" : "2",
+          "trac_price_in_base_currency" : "1"
+        },
+        {
           "blockchain_title": "Ethereum",
           "network_id": "copernicus",
           "hub_contract_address": "0x791ee543738B997B7A125bc849005B62aFD35578",
@@ -294,6 +308,20 @@
           "dc_price_factor" : "3",
           "dh_price_factor" : "2",
           "trac_price_in_base_currency" : "0.4"
+        },
+        {
+          "blockchain_title": "OriginTrail-Parachain",
+          "network_id": "parachain:testnet",
+          "blockchain_id": 2160,
+          "rpc_server_url": "http://159.89.98.23:9933",
+          "identity_filepath": "parachain_erc725_identity.json",
+          "hub_contract_address": "0xA63fF660dd7db1D32a8D5f48249889E7e80f0650",
+          "gas_limit": "6000000",
+          "initial_deposit_amount": "5000",
+          "gas_price": "100",
+          "dc_price_factor" : "3",
+          "dh_price_factor" : "2",
+          "trac_price_in_base_currency" : "1"
         }
       ]
     },

@@ -22,26 +22,15 @@
   "blockchain": {
     "implementations": [
       {
-        "blockchain_title": "Ethereum",
-        "network_id": "stargazer",
-        "gas_limit": "2000000",
-        "gas_price": "20000000000",
-        "identity_filepath": "stargazer_identity.json",
-        "hub_contract_address": "0x0987197628Bb06133B6FA2409eb4cF9FCaFe8d3a",
-        "rpc_server_url": "http://127.0.0.1:7545/"
-      },
-      {
-        "blockchain_title": "Ethereum",
-        "network_id": "copernicus",
-        "gas_limit": "2000000",
-        "gas_price": "20000000000",
-        "identity_filepath": "copernicus_identity.json",
-        "hub_contract_address": "0x791ee543738B997B7A125bc849005B62aFD35578",
-        "rpc_server_url": "http://127.0.0.1:7545/"
+        "blockchain_title": "OriginTrail-Parachain",
+        "network_id": "orion",
+        "gas_limit": "6000000",
+        "gas_price": "100",
+        "identity_filepath": "orion_erc725_identity.json"
       }
     ]
   },
-  "initial_deposit_amount": "10000000000000000000000",
+  "initial_deposit_amount": "4000000000000000000",
   "dc_holding_time_in_minutes": 5,
   "logs_level_debug": true,
   "dc_choose_time": 90000,
